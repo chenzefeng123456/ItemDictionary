@@ -7,7 +7,7 @@
 //
 
 #import "MycollectViewController.h"
-
+#import "describeModel.h"
 @interface MycollectViewController ()
 
 @end

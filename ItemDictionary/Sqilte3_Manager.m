@@ -7,6 +7,7 @@
 //
 
 #import "Sqilte3_Manager.h"
+#import "describeModel.h"
 
 @implementation Sqilte3_Manager
 
@@ -25,5 +26,35 @@
         [array addObject:str];
     }
     return array;
+}
+
+- (void)collectFMDB:(describeModel *)describe{
+  
+    NSLog(@"des = %p",describe);
+    NSString *path = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES) firstObject] stringByAppendingPathComponent:@"document.sqlite"];
+    NSLog(@"%@",path);
+    FMDatabase *dataBase = [[FMDatabase alloc] initWithPath:path];
+    [dataBase open];
+    NSLog(@"path = %@",path);
+    if ([dataBase executeUpdate:@"create table if not exists Dic(simp text primary key,pinyin text,bushou text,shenyin text,bihua text)"]) {
+        if ([dataBase executeUpdate:@"insert or replace into Dic(simp,pinyin,bushou,shenyin,bihua)values(?,?,?,?,?)",describe.miZiTian,describe.pinYin,describe.bushou,describe.shenyin,describe.bihua]) {
+            
+        }
+    }
+
+}
+
+- (void)collectCell:(describeModel *)describe{
+    NSString *path = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)firstObject] stringByAppendingPathComponent:@"document.sqlite"];
+    FMDatabase *data = [[FMDatabase alloc] initWithPath:path];
+    [data open];
+    FMResultSet *result = [data executeQuery:@"select * from Dic"];
+    while ([result next]) {
+        describe.miZiTian = [result stringForColumn:@"simp"];
+        describe.pinYin = [result stringForColumn:@"pinyin"];
+        describe.bushou = [result stringForColumn:@"bushou"];
+        describe.shenyin = [result stringForColumn:@"shenyin"];
+        describe.bihua = [result stringForColumn:@"bihua"];
+    }
 }
 @end

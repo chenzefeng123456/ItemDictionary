@@ -9,5 +9,9 @@
 #import <UIKit/UIKit.h>
 
 @interface MycollectTableViewCell : UITableViewCell
+@property (weak, nonatomic) IBOutlet UILabel *miZiLabel;
+@property (weak, nonatomic) IBOutlet UILabel *pinyinLabel;
+@property (weak, nonatomic) IBOutlet UILabel *bushouLabel;
+@property (weak, nonatomic) IBOutlet UILabel *bihuaLabel;
 
 @end

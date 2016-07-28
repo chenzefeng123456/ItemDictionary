@@ -11,6 +11,8 @@
 #import "iflyMSC/IFlySpeechConstant.h"
 #import "iflyMSC/IFlySpeechSynthesizer.h"
 #import "iflyMSC/IFlySpeechSynthesizerDelegate.h"
+#import <FMDB.h>
+#import "Sqilte3_Manager.h"
 @interface DescribeViewController ()<IFlySpeechSynthesizerDelegate>
 
 {
@@ -20,6 +22,7 @@
     UIBarButtonItem *starBar;
     UIBarButtonItem *shareBar;
     UIBarButtonItem *placeBar;
+    BOOL select;
 }
 
 @property (weak, nonatomic) IBOutlet UIImageView *beijingView;
@@ -34,6 +37,7 @@
     NSLog(@"a= %p",self);
     [self data];
     [self setUI];
+    select = NO;
     [self baseMessageURL];
     _iFlySpeechSynthesizer = [IFlySpeechSynthesizer sharedInstance]; _iFlySpeechSynthesizer.delegate =self;
     
@@ -73,6 +77,7 @@
           tool.barTintColor = COLOR(136, 40, 40);
     UIBarButtonItem *CalligrapherBar = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"pen"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStylePlain target:self action:@selector(CalligrapherAction)];
     documentBar2 = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"document"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStylePlain target:self action:@selector(documentAction)];
+    
     starBar = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"star"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStylePlain target:self action:@selector(starAction)];
     shareBar = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"share"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStylePlain target:self action:@selector(shareAction)];
     placeBar = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
@@ -87,8 +92,18 @@
 - (void)starAction{
     
 }
+//收藏
 - (void)documentAction{
-    documentBar2.tintColor = [UIColor redColor];
+   
+    describeModel *describe = [describeModel new];
+    Sqilte3_Manager *sqi = [Sqilte3_Manager new];
+    describe.miZiTian = self.miziLabel.text;
+    describe.pinYin = self.pinyinLabel.text;
+    describe.shenyin = self.string;
+    describe.bushou = self.bushouLabel.text;
+    describe.bihua = self.bihuaLabel.text;
+    [sqi collectFMDB:describe];
+   
     
 }
 - (void)CalligrapherAction{

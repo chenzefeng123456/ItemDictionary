@@ -8,9 +8,13 @@
 
 #import <Foundation/Foundation.h>
 #import <FMDB.h>
+#import "describeModel.h"
 @interface Sqilte3_Manager : NSObject
 //@property(nonatomic,strong) NSMutableArray *array;
 @property(nonatomic,strong) NSString *pinyin;
 - (NSArray *)sqilte3;
-    
+
+- (void)collectFMDB:(describeModel *)describe;
+
+- (void)collectCell:(describeModel *)describe;
 @end
