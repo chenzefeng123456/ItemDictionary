@@ -1,16 +1,9 @@
-//
-//  SourcePinYinViewController.m
-//  ItemDictionary
-//
-//  Created by 3014 on 16/7/22.
-//  Copyright © 2016年 3014. All rights reserved.
-//
 
 #import "SourcePinYinViewController.h"
 #import "PinYinTableViewCell.h"
 #import "PinYinModel.h"
 #import "DescribeViewController.h"
-
+#import "BushouViewController.h"
 @interface SourcePinYinViewController ()<UITableViewDelegate,UITableViewDataSource>
 @property(nonatomic,strong) UITableView *myTableView;
 @property(nonatomic,strong) NSMutableArray *dataSource;
@@ -32,7 +25,7 @@
     self.myTableView.delegate = self;
     self.myTableView.dataSource = self;
     [self setNavigationBarUI];
-    
+      
 
    
 }

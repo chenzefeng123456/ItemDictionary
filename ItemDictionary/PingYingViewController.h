@@ -12,5 +12,7 @@
 @property(nonatomic,strong) NSMutableArray *dataSource;
 @property(nonatomic,strong) FMDatabase *dataBase;
 @property(nonatomic,assign) NSInteger index;
+@property(nonatomic,assign) BOOL pinyin;
+
 
 @end

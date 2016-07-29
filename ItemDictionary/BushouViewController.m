@@ -32,8 +32,7 @@
     self.myTableView.dataSource = self;
      _muTable = [NSMutableArray array];
     [self initData];
-   
-   
+      
 }
 
 - (void)initData{

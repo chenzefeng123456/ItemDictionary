@@ -9,6 +9,13 @@
 #import "AppDelegate.h"
 #import "ViewController.h"
 #import <iflyMSC/IFlySpeechUtility.h>
+#import <ShareSDKConnector/ShareSDKConnector.h>
+#import <TencentOpenAPI/TencentOAuth.h>
+#import <TencentOpenAPI/QQApiInterface.h>
+#import "WXApi.h"
+#import "WeiboSDK.h"
+
+
 @interface AppDelegate ()
 
 @end
@@ -26,6 +33,33 @@
     self.window.rootViewController = navigation;
     NSString *initString = [[NSString alloc] initWithFormat:@"appid=%@",@"5796be53"];
     [IFlySpeechUtility createUtility:initString];
+   
+    
+    [ShareSDK registerApp:@"158b47bff9cec" activePlatforms:@[ @(SSDKPlatformTypeSinaWeibo)] onImport:^(SSDKPlatformType platformType)
+    {
+        switch (platformType)
+        {
+                case SSDKPlatformTypeSinaWeibo:
+                [ShareSDKConnector connectWeibo:[WeiboSDK class]];
+                break;
+                       default:
+                break;
+        }
+    } onConfiguration:^(SSDKPlatformType platformType, NSMutableDictionary *appInfo) {
+        switch (platformType)
+        {
+            case SSDKPlatformTypeSinaWeibo:
+                //设置新浪微博应用信息,其中authType设置为使用SSO＋Web形式授权
+                [appInfo SSDKSetupSinaWeiboByAppKey:@"2418170187"
+                                          appSecret:@"1ce1b1f659b91ccbeb5c31119cfec3c4"
+                                        redirectUri:@"http://www.sharesdk.cn"
+                                           authType:SSDKAuthTypeBoth];
+                break;
+                                          default:
+                break;
+        }
+        }];
+    
     return YES;
 }
 

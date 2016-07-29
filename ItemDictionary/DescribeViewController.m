@@ -13,15 +13,18 @@
 #import "iflyMSC/IFlySpeechSynthesizerDelegate.h"
 #import <FMDB.h>
 #import "Sqilte3_Manager.h"
+#import <ShareSDK/ShareSDK.h>
+#import <ShareSDKUI/ShareSDK+SSUI.h>
 @interface DescribeViewController ()<IFlySpeechSynthesizerDelegate>
 
 {
     
     IFlySpeechSynthesizer * _iFlySpeechSynthesizer;
     UIBarButtonItem *documentBar2 ;
-    UIBarButtonItem *starBar;
+    UIBarButtonItem *collectBar;
     UIBarButtonItem *shareBar;
     UIBarButtonItem *placeBar;
+    UIButton *collectButton;
 
 }
 
@@ -37,8 +40,9 @@
     NSLog(@"a= %p",self);
     [self data];
     [self setUI];
-
+    [self setUIToolBar];
     [self baseMessageURL];
+    self.title = self.string;
     _iFlySpeechSynthesizer = [IFlySpeechSynthesizer sharedInstance]; _iFlySpeechSynthesizer.delegate =self;
     
     [_iFlySpeechSynthesizer setParameter:[IFlySpeechConstant TYPE_CLOUD]
@@ -73,31 +77,123 @@
     self.baseMessage.numberOfLines = 0;
     [self.describeScroll addSubview:self.baseMessage];
     
-    UIToolbar *tool = [[UIToolbar alloc] initWithFrame:CGRectMake(0,SCREENHIGHT - 64, SCREENWIDTH, 64)];
-          tool.barTintColor = COLOR(136, 40, 40);
-    UIBarButtonItem *CalligrapherBar = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"pen"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStylePlain target:self action:@selector(CalligrapherAction)];
-    documentBar2 = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"document"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStylePlain target:self action:@selector(documentAction)];
-    
-    starBar = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"star"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStylePlain target:self action:@selector(starAction)];
-    shareBar = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"share"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStylePlain target:self action:@selector(shareAction)];
-    placeBar = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-    tool.items = @[CalligrapherBar,placeBar,documentBar2,placeBar,starBar,placeBar,shareBar];
 
+}
+
+- (void)setUIToolBar{
+    UIToolbar *tool = [[UIToolbar alloc] initWithFrame:CGRectMake(0,SCREENHIGHT - 44, SCREENWIDTH, 44)];
+    tool.barTintColor = COLOR(136, 40, 40);
+
+    UIView *caView = [[UIView alloc] initWithFrame:CGRectMake(0, 0,35, 44)];
+    UIButton *caButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [caButton setImage:[UIImage imageNamed:@"pen"] forState:UIControlStateNormal];
+    caButton.frame = CGRectMake(0, 5, 35, 20);
+    [caView addSubview:caButton];
+    UILabel *caLabel = [[UILabel alloc] initWithFrame:CGRectMake(1,30,44, 10)];
+    [caButton addTarget:self action:@selector(CalligrapherAction) forControlEvents:UIControlEventTouchUpInside];
+    caLabel.font = [UIFont systemFontOfSize:13];
+    caLabel.text = @"书法家";
+    caLabel.tintColor = [UIColor whiteColor];
+    [caView addSubview:caLabel];
+    UIBarButtonItem *CalligrapherBar = [[UIBarButtonItem alloc] initWithCustomView:caView];
+
+    UIView *doView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 35, 44)];
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [button setImage:[UIImage imageNamed:@"document"] forState:UIControlStateNormal];
+    
+    button.frame = CGRectMake(0, 5, 45, 20);
+    [doView addSubview:button];
+    UILabel *lab = [[UILabel alloc] initWithFrame:CGRectMake(7, 30, 45, 10)];
+    [button addTarget:self action:@selector(documentAction) forControlEvents:UIControlEventTouchUpInside];
+    lab.font = [UIFont systemFontOfSize:13];
+    lab.text = @"复制";
+    [lab setTintColor:[UIColor whiteColor]];
+    [doView addSubview:lab];
+    documentBar2 = [[UIBarButtonItem alloc] initWithCustomView:doView];
+    
+    UIView *collectView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 35, 44)];
+    collectButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [collectButton setImage:[UIImage imageNamed:@"star"] forState:UIControlStateNormal];
+    collectButton.frame = CGRectMake(0, 5, 45, 20);
+    [collectView addSubview:collectButton];
+    UILabel *collectLabel = [[UILabel alloc] initWithFrame:CGRectMake(7, 30, 45, 10)];
+    [collectButton addTarget:self action:@selector(collectAction) forControlEvents:UIControlEventTouchUpInside];
+    collectLabel.font = [UIFont systemFontOfSize:13];
+    collectLabel.text = @"收藏";
+    [collectLabel setTintColor:[UIColor whiteColor]];
+    [collectView addSubview:collectLabel];
+    collectBar = [[UIBarButtonItem alloc] initWithCustomView:collectView];
+
+    UIView *shareView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 35, 44)];
+    UIButton *shareButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [shareButton setImage:[UIImage imageNamed:@"share"] forState:UIControlStateNormal];
+    shareButton.frame = CGRectMake(0, 5, 45, 20);
+    [shareView addSubview:shareButton];
+    UILabel *shareLabel = [[UILabel alloc] initWithFrame:CGRectMake(7, 30, 45, 10)];
+    [shareButton addTarget:self action:@selector(shareAction) forControlEvents:UIControlEventTouchUpInside];
+    shareLabel.font = [UIFont systemFontOfSize:13];
+    shareLabel.text = @"分享";
+    [shareLabel setTintColor:[UIColor whiteColor]];
+    [shareView addSubview:shareLabel];
+    shareBar = [[UIBarButtonItem alloc] initWithCustomView:shareView];
+    placeBar = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    tool.items = @[CalligrapherBar,placeBar,documentBar2,placeBar,collectBar,placeBar,shareBar];
+    
     [self.view addSubview:tool];
 }
 
 - (void)shareAction{
-    
-}
-- (void)starAction{
-    
+    //1、创建分享参数
+    NSArray* imageArray = @[[UIImage imageNamed:@"1.png"]];
+    //（注意：图片必须要在Xcode左边目录里面，名称必须要传正确，如果要分享网络图片，可以这样传iamge参数 images:@[@"http://mob.com/Assets/images/logo.png?v=20150320"]）
+    if (imageArray) {
+        
+        NSMutableDictionary *shareParams = [NSMutableDictionary dictionary];
+        [shareParams SSDKSetupShareParamsByText:@"分享内容"
+                                         images:imageArray
+                                            url:[NSURL URLWithString:@"http://mob.com"]
+                                          title:@"分享标题"
+                                           type:SSDKContentTypeAuto];
+        //2、分享（可以弹出我们的分享菜单和编辑界面）
+        [ShareSDK showShareActionSheet:nil //要显示菜单的视图, iPad版中此参数作为弹出菜单的参照视图，只有传这个才可以弹出我们的分享菜单，可以传分享的按钮对象或者自己创建小的view 对象，iPhone可以传nil不会影响
+                                 items:nil
+                           shareParams:shareParams
+                   onShareStateChanged:^(SSDKResponseState state, SSDKPlatformType platformType, NSDictionary *userData, SSDKContentEntity *contentEntity, NSError *error, BOOL end) {
+                       
+                       switch (state) {
+                           case SSDKResponseStateSuccess:
+                           {
+                               UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"分享成功"
+                                                                                   message:nil
+                                                                                  delegate:nil
+                                                                         cancelButtonTitle:@"确定"
+                                                                         otherButtonTitles:nil];
+                               [alertView show];
+                               break;
+                           }
+                           case SSDKResponseStateFail:
+                           {
+                               UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"分享失败"
+                                                                               message:[NSString stringWithFormat:@"%@",error]
+                                                                              delegate:nil
+                                                                     cancelButtonTitle:@"OK"
+                                                                     otherButtonTitles:nil, nil];
+                               [alert show];
+                               break;
+                           }
+                           default:
+                               break;
+                       }
+                   }
+         ];}
 }
 //收藏
-- (void)documentAction{
+- (void)collectAction{
     describeModel *describe = [describeModel new];
     Sqilte3_Manager *sqi = [Sqilte3_Manager new];
     if (documentBar2.tag == 0) {
         documentBar2.tag = 1;
+        [collectButton setTintColor:[UIColor yellowColor]];
         describe.miZiTian = self.miziLabel.text;
         describe.pinYin = self.pinyinLabel.text;
         describe.shenyin = self.string;
@@ -105,16 +201,20 @@
         describe.bihua = self.bihuaLabel.text;
         [sqi collectFMDB:describe];
         NSLog(@"我被选中了");
-
+        
     }else{
-       documentBar2.tag = 0;
+        documentBar2.tag = 0;
         if ([sqi deleteData:self.miziLabel.text]) {
             NSLog(@"删除");
         }
-    
+        
         
     }
-    
+
+}
+
+- (void)documentAction{
+    NSLog(@"我被点击了");
     
 }
 - (void)CalligrapherAction{
