@@ -8,8 +8,11 @@
 
 #import "MycollectViewController.h"
 #import "describeModel.h"
-@interface MycollectViewController ()
-
+#import "MycollectTableViewCell.h"
+#import "Sqilte3_Manager.h"
+@interface MycollectViewController ()<UITableViewDelegate,UITableViewDataSource>
+@property(nonatomic,strong) UITableView *myTableView;
+@property(nonatomic,strong) NSArray *dataSource;
 @end
 
 @implementation MycollectViewController
@@ -18,14 +21,40 @@
     [super viewDidLoad];
     self.title = @"我的收藏";
     [self setUIView];
+   
+     self.dataSource = [Sqilte3_Manager collectCell];
+    
 }
 - (void)setUIView{
-    UIImageView *imageviewBack = [[UIImageView alloc] initWithFrame:self.view.frame];
-    imageviewBack.image = [UIImage imageNamed:@"beijing"];
-    [self.view addSubview:imageviewBack];
+  
+
+    self.myTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, SCREENWIDTH, SCREENHIGHT) style:UITableViewStylePlain];
+    self.myTableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"beijing"]];
+  
+    self.myTableView.rowHeight = 85;
+    self.myTableView.dataSource = self;
+    self.myTableView.delegate = self;
+    [self.view addSubview:self.myTableView];
+    [self.myTableView registerNib:[UINib nibWithNibName:@"MycollectTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:NSStringFromClass([MycollectTableViewCell class])];
+    [self.myTableView reloadData];
     
 }
 
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+   MycollectTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([MycollectTableViewCell class])];
+    cell.backgroundColor = [UIColor clearColor];
+    describeModel *des = self.dataSource[indexPath.row];
+    cell.miZiLabel.text = des.miZiTian;
+    cell.pinyinLabel.text = des.pinYin;
+    cell.bushouLabel.text = des.bushou;
+    cell.bihuaLabel.text = des.bihua;
+    
+    return cell;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    return self.dataSource.count;
+}
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.

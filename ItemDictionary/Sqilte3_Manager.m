@@ -44,17 +44,32 @@
 
 }
 
-- (void)collectCell:(describeModel *)describe{
++ (NSArray *)collectCell{
+    
+    NSMutableArray *muTable = [NSMutableArray array];
     NSString *path = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)firstObject] stringByAppendingPathComponent:@"document.sqlite"];
     FMDatabase *data = [[FMDatabase alloc] initWithPath:path];
     [data open];
     FMResultSet *result = [data executeQuery:@"select * from Dic"];
     while ([result next]) {
+        describeModel *describe = [describeModel new];
         describe.miZiTian = [result stringForColumn:@"simp"];
         describe.pinYin = [result stringForColumn:@"pinyin"];
         describe.bushou = [result stringForColumn:@"bushou"];
         describe.shenyin = [result stringForColumn:@"shenyin"];
         describe.bihua = [result stringForColumn:@"bihua"];
+        [muTable addObject:describe];
     }
+    return muTable;
+}
+
+- (BOOL)deleteData:(NSString *)describe{
+   
+    NSString *path = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingPathComponent:@"document.sqlite"];
+    FMDatabase *data = [FMDatabase databaseWithPath:path];
+    [data open];
+    BOOL delete = [data executeUpdate:@"delete from Dic where simp = ?",describe];
+    return delete;
+    
 }
 @end

@@ -15,6 +15,6 @@
 - (NSArray *)sqilte3;
 
 - (void)collectFMDB:(describeModel *)describe;
-
-- (void)collectCell:(describeModel *)describe;
+- (BOOL)deleteData:(NSString *)describe;
++ (NSArray *)collectCell;
 @end

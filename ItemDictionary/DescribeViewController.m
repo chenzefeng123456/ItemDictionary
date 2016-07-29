@@ -22,7 +22,7 @@
     UIBarButtonItem *starBar;
     UIBarButtonItem *shareBar;
     UIBarButtonItem *placeBar;
-    BOOL select;
+
 }
 
 @property (weak, nonatomic) IBOutlet UIImageView *beijingView;
@@ -37,7 +37,7 @@
     NSLog(@"a= %p",self);
     [self data];
     [self setUI];
-    select = NO;
+
     [self baseMessageURL];
     _iFlySpeechSynthesizer = [IFlySpeechSynthesizer sharedInstance]; _iFlySpeechSynthesizer.delegate =self;
     
@@ -94,16 +94,27 @@
 }
 //收藏
 - (void)documentAction{
-   
     describeModel *describe = [describeModel new];
     Sqilte3_Manager *sqi = [Sqilte3_Manager new];
-    describe.miZiTian = self.miziLabel.text;
-    describe.pinYin = self.pinyinLabel.text;
-    describe.shenyin = self.string;
-    describe.bushou = self.bushouLabel.text;
-    describe.bihua = self.bihuaLabel.text;
-    [sqi collectFMDB:describe];
-   
+    if (documentBar2.tag == 0) {
+        documentBar2.tag = 1;
+        describe.miZiTian = self.miziLabel.text;
+        describe.pinYin = self.pinyinLabel.text;
+        describe.shenyin = self.string;
+        describe.bushou = self.bushouLabel.text;
+        describe.bihua = self.bihuaLabel.text;
+        [sqi collectFMDB:describe];
+        NSLog(@"我被选中了");
+
+    }else{
+       documentBar2.tag = 0;
+        if ([sqi deleteData:self.miziLabel.text]) {
+            NSLog(@"删除");
+        }
+    
+        
+    }
+    
     
 }
 - (void)CalligrapherAction{
